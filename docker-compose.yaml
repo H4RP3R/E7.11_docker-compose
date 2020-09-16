@@ -1,0 +1,34 @@
+version: '3.3'
+
+services:
+    back:
+        environment:
+            - MONGO-PORT=27017
+            - MONGO_HOST=mongo
+            - REDIS_HOST=redis
+            - REDIS_PORT=6379
+        build:
+            context: .
+            dockerfile: SF_E7.11_back/Dockerfile
+        ports:
+            - 8000:8000
+        depends_on:
+            - redis
+            - mongo
+
+    redis:
+        image: redis:6.0.6-alpine
+        command: redis-server
+
+    mongo:
+        image: mongo:4.0
+        restart: always
+
+    front:
+        build:
+            context: .
+            dockerfile: SF_E7.11_front/Dockerfile
+        ports:
+            - 8080:8080
+        depends_on:
+            - back
